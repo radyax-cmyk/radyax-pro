@@ -1111,7 +1111,7 @@ function AdminLogin({ setView }) {
   const handleLogin = (e) => {
     e.preventDefault();
     // Cambia el texto entre las comillas simples por tu nueva contraseña
-    if (password === 'RadyaxAdmin2024!') { 
+    if (password === 'Orden_10') { 
       setView('admin_dashboard');
     } else {
       setError('Contraseña incorrecta. Intente de nuevo.');
