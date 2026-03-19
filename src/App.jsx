@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   User, Calendar, Phone, Mail, FileText, CheckSquare, List, Plus, 
   Search, Filter, Download, BarChart3, LogIn, ChevronRight, ChevronLeft, 
-  CheckCircle2, Clock, Check, FileDown, Activity, UserCheck, PackageOpen, Share2, Eye, X
+  CheckCircle2, Clock, Check, FileDown, Activity, UserCheck, PackageOpen, Share2, Eye, X, Trash2
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -1160,6 +1160,18 @@ function AdminDashboard({ orders, setView }) {
   const [statusFilter, setStatusFilter] = useState('Todos');
   const [viewingOrder, setViewingOrder] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+
+  const deleteOrder = async () => {
+    if (!orderToDelete) return;
+    try {
+      const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'radyax_orders', orderToDelete.id);
+      await deleteDoc(orderRef);
+      setOrderToDelete(null); // Cerrar el modal después de borrar
+    } catch (error) {
+      console.error("Error al eliminar orden:", error);
+    }
+  };
 
   const stats = useMemo(() => {
     const total = orders.length;
@@ -1363,6 +1375,13 @@ function AdminDashboard({ orders, setView }) {
                       >
                         <Eye className="w-4 h-4" />
                       </button>
+                      <button 
+                        onClick={() => setOrderToDelete(order)}
+                        className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded transition-colors"
+                        title="Eliminar Orden"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                       <select 
                         value={order.status}
                         onChange={(e) => updateStatus(order.id, e.target.value)}
@@ -1501,6 +1520,35 @@ function AdminDashboard({ orders, setView }) {
                 </button>
               </div>
 
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE CONFIRMACIÓN DE ELIMINACIÓN */}
+      {orderToDelete && (
+        <div className="fixed inset-0 bg-slate-900/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
+              <Trash2 className="w-6 h-6 text-red-600" />
+            </div>
+            <h3 className="text-xl font-bold text-center text-slate-900 mb-2">¿Eliminar Orden?</h3>
+            <p className="text-center text-slate-500 mb-6">
+              Estás a punto de eliminar la orden <strong className="text-slate-700">{orderToDelete.folio}</strong> de <strong className="text-slate-700">{orderToDelete.patient.name}</strong>. Esta acción no se puede deshacer.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setOrderToDelete(null)}
+                className="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition font-medium"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={deleteOrder}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
+              >
+                Sí, Eliminar
+              </button>
             </div>
           </div>
         </div>
