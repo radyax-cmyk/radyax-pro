@@ -970,9 +970,12 @@ const getPdfHtmlString = (data, folio) => {
   return `
     <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; background-color: white;">
       <div style="border-bottom: 3px solid #00609C; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div>
-          <h1 style="color: #00609C; margin: 0; font-size: 28px;">Radyax<span style="color: #A4D65E;">Pro</span></h1>
-          <p style="margin: 5px 0 0; color: #64748b; font-size: 14px;">Orden de Estudios Radiológicos</p>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <img src="/logo.png" alt="Radyax Logo" style="width: 60px; height: 60px; object-fit: contain;" onerror="this.style.display='none'" />
+          <div>
+            <h1 style="color: #00609C; margin: 0; font-size: 28px;">Radyax<span style="color: #A4D65E;">Pro</span></h1>
+            <p style="margin: 5px 0 0; color: #64748b; font-size: 14px;">Orden de Estudios Radiológicos</p>
+          </div>
         </div>
         <div style="text-align: right;">
           <p style="margin: 0; font-weight: bold; font-size: 18px; color: #00609C;">Folio: ${folio}</p>
@@ -1107,10 +1110,11 @@ function AdminLogin({ setView }) {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'Orden_10') {
+    // Cambia el texto entre las comillas simples por tu nueva contraseña
+    if (password === 'RadyaxAdmin2024!') { 
       setView('admin_dashboard');
     } else {
-      setError('Contraseña incorrecta. (Incorrecto)');
+      setError('Contraseña incorrecta. Intente de nuevo.');
     }
   };
 
